@@ -1,0 +1,31 @@
+gr-dect2
+========
+
+This project was developed to demonstrate the possibility of real-time DECT voice
+channel decoding  by Gnuradio  It allows to listen to voice when encryption isn't used. 
+As an example DECT digital baby monitors don't perform encryption. Usage of this project 
+for phone connection eavesdropping may be illegal in some countries.
+
+
+
+Hardware requirements
+---------------------
+This project was tested with USRP2 + WBX daughterboard.
+As a DECT link source the Motorola MBP12 baby monitor was used.
+
+
+
+To build
+--------
+git clone git://github.com/pavelyazev/gr-dect2.git
+cd gr-dect2/
+mkdir build
+cd build
+cmake ../
+make
+sudo make install
+sudo ldconfig
+
+Then Gnuradio companion should be used to open flow graph dect2.grc from gr-dect/grc
+
+ 
