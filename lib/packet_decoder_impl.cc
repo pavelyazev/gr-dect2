@@ -267,7 +267,7 @@ namespace gr {
                 //std::cout << "*********** LOST part ************" << std::endl;
 
                 // Remove active part
-                uint32_t rx_id = (uint32_t)pmt::to_long(pmt::dict_ref( msg, pmt::mp("part_rx_id"), pmt::PMT_NIL));
+                uint32_t rx_id = (uint32_t)pmt::to_uint64(pmt::dict_ref( msg, pmt::mp("part_rx_id"), pmt::PMT_NIL));
 
                 part_descriptor_item *part_item = &d_part_descriptor[rx_id];
                 part_item->active = false;
@@ -365,11 +365,11 @@ namespace gr {
         {
             if(pmt::eq(tags[i].key, pmt::mp("part_rx_id")))
             {
-                rx_id = (uint32_t)pmt::to_long(tags[i].value); 
+                rx_id = (uint32_t)pmt::to_uint64(tags[i].value); 
             }
             else if(pmt::eq(tags[i].key, pmt::mp("rx_seq")))
             {
-                rx_seq = (uint64_t)pmt::to_long(tags[i].value); 
+                rx_seq = (uint64_t)pmt::to_uint64(tags[i].value); 
             }            
             else if(pmt::eq(tags[i].key, pmt::mp("part_type")))
             {
