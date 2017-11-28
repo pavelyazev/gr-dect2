@@ -97,7 +97,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(560, 552)</value>
+      <value>(496, 432)</value>
     </param>
     <param>
       <key>gui_hint</key>
@@ -134,6 +134,69 @@
     <param>
       <key>stop</key>
       <value>14</value>
+    </param>
+    <param>
+      <key>rangeType</key>
+      <value>int</value>
+    </param>
+    <param>
+      <key>widget</key>
+      <value>counter_slider</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_qtgui_range</key>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>34</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(632, 432)</value>
+    </param>
+    <param>
+      <key>gui_hint</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>VGA_bb_gain</value>
+    </param>
+    <param>
+      <key>label</key>
+      <value>VGA BB Gain</value>
+    </param>
+    <param>
+      <key>min_len</key>
+      <value>200</value>
+    </param>
+    <param>
+      <key>orient</key>
+      <value>Qt.Horizontal</value>
+    </param>
+    <param>
+      <key>start</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>step</key>
+      <value>2</value>
+    </param>
+    <param>
+      <key>stop</key>
+      <value>62</value>
     </param>
     <param>
       <key>rangeType</key>
@@ -268,7 +331,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(400, 552)</value>
+      <value>(360, 432)</value>
     </param>
     <param>
       <key>gui_hint</key>
@@ -430,7 +493,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(248, 552)</value>
+      <value>(224, 432)</value>
     </param>
     <param>
       <key>gui_hint</key>
@@ -627,7 +690,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1080, 596)</value>
+      <value>(1080, 484)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -670,7 +733,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1056, 340)</value>
+      <value>(1064, 268)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -717,7 +780,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(832, 416)</value>
+      <value>(840, 344)</value>
     </param>
     <param>
       <key>gui_hint</key>
@@ -752,7 +815,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(576, 344)</value>
+      <value>(584, 272)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -795,7 +858,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(248, 344)</value>
+      <value>(256, 272)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -834,7 +897,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1064, 176)</value>
+      <value>(1064, 120)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -873,7 +936,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(824, 160)</value>
+      <value>(824, 104)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -928,7 +991,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(568, 140)</value>
+      <value>(568, 84)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -987,7 +1050,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(848, 568)</value>
+      <value>(848, 456)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1030,7 +1093,7 @@
     </param>
     <param>
       <key>bb_gain0</key>
-      <value>8</value>
+      <value>VGA_bb_gain</value>
     </param>
     <param>
       <key>bw0</key>
@@ -1038,7 +1101,7 @@
     </param>
     <param>
       <key>dc_offset_mode0</key>
-      <value>0</value>
+      <value>2</value>
     </param>
     <param>
       <key>corr0</key>
@@ -2445,7 +2508,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(808, 344)</value>
+      <value>(816, 272)</value>
     </param>
     <param>
       <key>_rotation</key>
