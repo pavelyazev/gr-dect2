@@ -379,6 +379,33 @@
     </param>
   </block>
   <block>
+    <key>variable</key>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(536, 28)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>options_low_pass</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>1400500</value>
+    </param>
+  </block>
+  <block>
     <key>variable_qtgui_chooser</key>
     <param>
       <key>comment</key>
@@ -667,6 +694,33 @@
     </param>
   </block>
   <block>
+    <key>variable</key>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(432, 28)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>xlate_offset1</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>800000</value>
+    </param>
+  </block>
+  <block>
     <key>audio_sink</key>
     <param>
       <key>alias</key>
@@ -897,7 +951,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1064, 120)</value>
+      <value>(1112, 136)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -936,7 +990,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(824, 104)</value>
+      <value>(896, 120)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -968,6 +1022,65 @@
     </param>
   </block>
   <block>
+    <key>freq_xlating_fir_filter_xxx</key>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>center_freq</key>
+      <value>xlate_offset1</value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>decim</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(440, 96)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>freq_xlating_fir_filter_xxx_0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>samp_rate</key>
+      <value>baseband_sampling_rate</value>
+    </param>
+    <param>
+      <key>taps</key>
+      <value>firdes.low_pass(1, baseband_sampling_rate, options_low_pass, options_low_pass*0.2)</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>ccc</value>
+    </param>
+  </block>
+  <block>
     <key>rational_resampler_base_xxx</key>
     <param>
       <key>alias</key>
@@ -991,7 +1104,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(568, 84)</value>
+      <value>(672, 100)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1109,7 +1222,7 @@
     </param>
     <param>
       <key>freq0</key>
-      <value>rx_freq</value>
+      <value>rx_freq-xlate_offset1</value>
     </param>
     <param>
       <key>gain_mode0</key>
@@ -2385,7 +2498,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(240, 36)</value>
+      <value>(192, 36)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -2570,6 +2683,12 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
+    <source_block_id>freq_xlating_fir_filter_xxx_0</source_block_id>
+    <sink_block_id>rational_resampler</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
     <source_block_id>rational_resampler</source_block_id>
     <sink_block_id>fractional_resampler</sink_block_id>
     <source_key>0</source_key>
@@ -2583,7 +2702,7 @@
   </connection>
   <connection>
     <source_block_id>rtlsdr_source_0</source_block_id>
-    <sink_block_id>rational_resampler</sink_block_id>
+    <sink_block_id>freq_xlating_fir_filter_xxx_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
