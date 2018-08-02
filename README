@@ -32,6 +32,7 @@ To build
 ---------
 
 git clone git://github.com/pavelyazev/gr-dect2.git
+( git checkout pyqt4  - optional in case of old Gnuradio and PyQt4)
 cd gr-dect2/
 mkdir build
 cd build
