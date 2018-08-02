@@ -24,21 +24,23 @@ from gnuradio import gr
 
 
 try:
-    from PyQt4 import QtCore, QtGui
+    from PyQt5 import QtCore, QtGui, QtWidgets
 
 except ImportError:
-    sys.stderr.write("Error: Program requires PyQt4 and gr-qtgui.\n")
+    sys.stderr.write("Error: Program requires PyQt5 and gr-qtgui.\n")
     sys.exit(1)
 
 
-class console(gr.basic_block, QtGui.QTextEdit):
+class console(gr.basic_block, QtWidgets.QTextEdit):
+    console_update = QtCore.pyqtSignal()
+
     def __init__(self):
         gr.basic_block.__init__(self, name="console", in_sig=[], out_sig=[])
-        QtGui.QTextEdit.__init__(self)
+        QtWidgets.QTextEdit.__init__(self)
         self.message_port_register_in(pmt.intern("in"))
         self.set_msg_handler(pmt.intern("in"), self.handle_msg)
 
-        QtCore.QObject.connect(self, QtCore.SIGNAL("console_update"), self.update)
+        self.console_update.connect(self.update)
 
         self.font = self.document().defaultFont();
         self.font.setFamily("Courier New");
@@ -50,7 +52,7 @@ class console(gr.basic_block, QtGui.QTextEdit):
         if(pmt.dict_has_key( msg, pmt.to_pmt("log_msg"))):        
             log_msg = pmt.dict_ref( msg, pmt.to_pmt("log_msg"), pmt.PMT_NIL)
             self.console_msg = pmt.to_python(log_msg)
-            self.emit(QtCore.SIGNAL("console_update"))
+            self.console_update.emit()
         
     def update(self):    
         self.append(self.console_msg)
