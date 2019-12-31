@@ -36,7 +36,11 @@ if(NOT dect2_sources)
 endif(NOT dect2_sources)
 
 add_library(gnuradio-dect2 SHARED ${dect2_sources})
-target_link_libraries(gnuradio-dect2 ${Boost_LIBRARIES} ${GNURADIO_ALL_LIBRARIES})
+target_link_libraries(gnuradio-dect2 ${Boost_LIBRARIES} gnuradio::gnuradio-runtime gnuradio::gnuradio-blocks gnuradio::gnuradio-filter gnuradio::gnuradio-blocks gnuradio::gnuradio-fft volk)
+target_include_directories(gnuradio-dect2
+    PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
+    PUBLIC $<INSTALL_INTERFACE:include>
+  )
 set_target_properties(gnuradio-dect2 PROPERTIES DEFINE_SYMBOL "gnuradio_dect2_EXPORTS")
 
 if(APPLE)
@@ -66,14 +70,10 @@ list(APPEND test_dect2_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_dect2.cc
 )
 
-add_executable(test-dect2 ${test_dect2_sources})
+list(APPEND GR_TEST_TARGET_DEPS dect2)
 
-target_link_libraries(
-  test-dect2
-  ${GNURADIO_RUNTIME_LIBRARIES}
-  ${Boost_LIBRARIES}
-  ${CPPUNIT_LIBRARIES}
-  gnuradio-dect2
-)
-
-GR_ADD_TEST(test_dect2 test-dect2)
+#foreach(qa_file ${test_dect2_sources})
+#    GR_ADD_CPP_TEST("dect2_${qa_file}"
+#        ${CMAKE_CURRENT_SOURCE_DIR}/${qa_file}
+#    )
+#endforeach(qa_file)
