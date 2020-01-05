@@ -31,9 +31,9 @@ try:
     from dl import RTLD_GLOBAL as _RTLD_GLOBAL
 except ImportError:
     try:
-	from DLFCN import RTLD_GLOBAL as _RTLD_GLOBAL
+        from DLFCN import RTLD_GLOBAL as _RTLD_GLOBAL
     except ImportError:
-	pass
+        pass
 
 if _RTLD_GLOBAL != 0:
     _dlopenflags = sys.getdlopenflags()
@@ -42,8 +42,8 @@ if _RTLD_GLOBAL != 0:
 
 
 # import swig generated symbols into the dect2 namespace
-from dect2_swig import *
-from console import *
+from dect2.dect2_swig import *
+from .console import *
 
 # import any pure python here
 #

@@ -17,8 +17,8 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 install(FILES
-    dect2_console.xml
-    dect2_phase_diff.xml
-    dect2_packet_decoder.xml
-    dect2_packet_receiver.xml DESTINATION share/gnuradio/grc/blocks
+    dect2_console.block.yml
+    dect2_phase_diff.block.yml
+    dect2_packet_decoder.block.yml
+    dect2_packet_receiver.block.yml DESTINATION share/gnuradio/grc/blocks
 )
