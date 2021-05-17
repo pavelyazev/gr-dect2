@@ -6,7 +6,7 @@
 #
 # GNU Radio Python Flow Graph
 # Title: Top Block
-# GNU Radio version: 3.8.0.0
+# GNU Radio version: 3.8.1.0
 
 from distutils.version import StrictVersion
 
@@ -32,11 +32,11 @@ import signal
 from argparse import ArgumentParser
 from gnuradio.eng_arg import eng_float, intx
 from gnuradio import eng_notation
-from gnuradio import uhd
-import time
 from gnuradio import vocoder
 from gnuradio.qtgui import Range, RangeWidget
 import dect2
+import osmosdr
+import time
 from gnuradio import qtgui
 
 class top_block(gr.top_block, Qt.QWidget):
@@ -78,19 +78,21 @@ class top_block(gr.top_block, Qt.QWidget):
         self.dect_symbol_rate = dect_symbol_rate = 1152000
         self.dect_occupied_bandwidth = dect_occupied_bandwidth = 1.2*dect_symbol_rate
         self.dect_channel_bandwidth = dect_channel_bandwidth = 1.728e6
-        self.baseband_sampling_rate = baseband_sampling_rate = 100000000/32
-        self.rx_gain = rx_gain = 0
+        self.baseband_sampling_rate = baseband_sampling_rate = 4000000
+        self.xlate_offset1 = xlate_offset1 = 1000000
         self.rx_freq = rx_freq = 1897344000
         self.resampler_filter_taps = resampler_filter_taps = firdes.low_pass_2(1, 3*baseband_sampling_rate, dect_occupied_bandwidth/2, (dect_channel_bandwidth - dect_occupied_bandwidth)/2, 30)
         self.resample_ratio = resample_ratio = int((3.0*baseband_sampling_rate/2.0)/dect_symbol_rate/4.0)
+        self.ppm_corr = ppm_corr = 20
         self.part_id = part_id = 0
+        self.options_low_pass = options_low_pass = 1400500
+        self.if_gain = if_gain = 40
+        self.VGA_bb_gain = VGA_bb_gain = 34
+        self.LNA_rf_gain = LNA_rf_gain = 0
 
         ##################################################
         # Blocks
         ##################################################
-        self._rx_gain_range = Range(0, 30, 1, 0, 200)
-        self._rx_gain_win = RangeWidget(self._rx_gain_range, self.set_rx_gain, 'RX Gain', "counter_slider", float)
-        self.top_grid_layout.addWidget(self._rx_gain_win)
         # Create the options list
         self._rx_freq_options = [1897344000, 1881792000, 1883520000, 1885248000, 1886876000, 1888704000, 1890432000, 1892160000, 1893888000, 1895616000,]
         # Create the labels list
@@ -107,20 +109,31 @@ class top_block(gr.top_block, Qt.QWidget):
             lambda i: self.set_rx_freq(self._rx_freq_options[i]))
         # Create the radio buttons
         self.top_grid_layout.addWidget(self._rx_freq_tool_bar)
+        self._ppm_corr_range = Range(-100, 100, 1, 20, 200)
+        self._ppm_corr_win = RangeWidget(self._ppm_corr_range, self.set_ppm_corr, 'ppm', "counter_slider", int)
+        self.top_grid_layout.addWidget(self._ppm_corr_win)
+        self._if_gain_range = Range(0, 40, 8, 40, 200)
+        self._if_gain_win = RangeWidget(self._if_gain_range, self.set_if_gain, 'IF Gain', "counter_slider", int)
+        self.top_grid_layout.addWidget(self._if_gain_win)
+        self._VGA_bb_gain_range = Range(0, 62, 2, 34, 200)
+        self._VGA_bb_gain_win = RangeWidget(self._VGA_bb_gain_range, self.set_VGA_bb_gain, 'VGA BB Gain', "counter_slider", int)
+        self.top_grid_layout.addWidget(self._VGA_bb_gain_win)
+        self._LNA_rf_gain_range = Range(0, 14, 14, 0, 200)
+        self._LNA_rf_gain_win = RangeWidget(self._LNA_rf_gain_range, self.set_LNA_rf_gain, 'LNA RF Gain', "counter_slider", int)
+        self.top_grid_layout.addWidget(self._LNA_rf_gain_win)
         self.vocoder_g721_decode_bs_0 = vocoder.g721_decode_bs()
-        self.uhd_usrp_source_0 = uhd.usrp_source(
-            ",".join(('', "")),
-            uhd.stream_args(
-                cpu_format="fc32",
-                args='',
-                channels=[],
-            ),
+        self.rtlsdr_source_0 = osmosdr.source(
+            args="numchan=" + str(1) + " " + 'hackrf=0'
         )
-        self.uhd_usrp_source_0.set_center_freq(rx_freq, 0)
-        self.uhd_usrp_source_0.set_gain(rx_gain, 0)
-        self.uhd_usrp_source_0.set_antenna('LNAW', 0)
-        self.uhd_usrp_source_0.set_samp_rate(3125000)
-        # No synchronization enforced.
+        self.rtlsdr_source_0.set_time_unknown_pps(osmosdr.time_spec_t())
+        self.rtlsdr_source_0.set_sample_rate(baseband_sampling_rate)
+        self.rtlsdr_source_0.set_center_freq(rx_freq-xlate_offset1, 0)
+        self.rtlsdr_source_0.set_freq_corr(ppm_corr, 0)
+        self.rtlsdr_source_0.set_gain(LNA_rf_gain, 0)
+        self.rtlsdr_source_0.set_if_gain(if_gain, 0)
+        self.rtlsdr_source_0.set_bb_gain(VGA_bb_gain, 0)
+        self.rtlsdr_source_0.set_antenna('', 0)
+        self.rtlsdr_source_0.set_bandwidth(0, 0)
         self.rational_resampler_xxx_0 = filter.rational_resampler_fff(
                 interpolation=6,
                 decimation=1,
@@ -143,14 +156,15 @@ class top_block(gr.top_block, Qt.QWidget):
             lambda i: self.set_part_id(self._part_id_options[i]))
         # Create the radio buttons
         self.top_grid_layout.addWidget(self._part_id_tool_bar)
-        self.mmse_resampler_xx_0 = filter.mmse_resampler_cc(0, resample_ratio)
+        self.mmse_resampler_xx_0 = filter.mmse_resampler_cc(0, (3.0*baseband_sampling_rate/2.0)/dect_symbol_rate/4.0)
+        self.freq_xlating_fir_filter_xxx_0 = filter.freq_xlating_fir_filter_ccc(1, firdes.low_pass(1, baseband_sampling_rate, options_low_pass, options_low_pass*0.2), xlate_offset1, baseband_sampling_rate)
         self.dect2_phase_diff_0 = dect2.phase_diff()
         self.dect2_packet_receiver_0 = dect2.packet_receiver()
         self.dect2_packet_decoder_0 = dect2.packet_decoder()
         self.console_0 = dect2.console()
         self.top_grid_layout.addWidget(self.console_0)
         self.blocks_short_to_float_0 = blocks.short_to_float(1, 32768)
-        self.audio_sink_0 = audio.sink(48000, 'plughw:0,0', True)
+        self.audio_sink_0 = audio.sink(48000, '', True)
 
 
 
@@ -163,10 +177,11 @@ class top_block(gr.top_block, Qt.QWidget):
         self.connect((self.dect2_packet_decoder_0, 0), (self.vocoder_g721_decode_bs_0, 0))
         self.connect((self.dect2_packet_receiver_0, 0), (self.dect2_packet_decoder_0, 0))
         self.connect((self.dect2_phase_diff_0, 0), (self.dect2_packet_receiver_0, 0))
+        self.connect((self.freq_xlating_fir_filter_xxx_0, 0), (self.rational_resampler, 0))
         self.connect((self.mmse_resampler_xx_0, 0), (self.dect2_phase_diff_0, 0))
         self.connect((self.rational_resampler, 0), (self.mmse_resampler_xx_0, 0))
         self.connect((self.rational_resampler_xxx_0, 0), (self.audio_sink_0, 0))
-        self.connect((self.uhd_usrp_source_0, 0), (self.rational_resampler, 0))
+        self.connect((self.rtlsdr_source_0, 0), (self.freq_xlating_fir_filter_xxx_0, 0))
         self.connect((self.vocoder_g721_decode_bs_0, 0), (self.blocks_short_to_float_0, 0))
 
     def closeEvent(self, event):
@@ -181,6 +196,7 @@ class top_block(gr.top_block, Qt.QWidget):
         self.dect_symbol_rate = dect_symbol_rate
         self.set_dect_occupied_bandwidth(1.2*self.dect_symbol_rate)
         self.set_resample_ratio(int((3.0*self.baseband_sampling_rate/2.0)/self.dect_symbol_rate/4.0))
+        self.mmse_resampler_xx_0.set_resamp_ratio((3.0*self.baseband_sampling_rate/2.0)/self.dect_symbol_rate/4.0)
 
     def get_dect_occupied_bandwidth(self):
         return self.dect_occupied_bandwidth
@@ -203,12 +219,17 @@ class top_block(gr.top_block, Qt.QWidget):
         self.baseband_sampling_rate = baseband_sampling_rate
         self.set_resample_ratio(int((3.0*self.baseband_sampling_rate/2.0)/self.dect_symbol_rate/4.0))
         self.set_resampler_filter_taps(firdes.low_pass_2(1, 3*self.baseband_sampling_rate, self.dect_occupied_bandwidth/2, (self.dect_channel_bandwidth - self.dect_occupied_bandwidth)/2, 30))
+        self.freq_xlating_fir_filter_xxx_0.set_taps(firdes.low_pass(1, self.baseband_sampling_rate, self.options_low_pass, self.options_low_pass*0.2))
+        self.mmse_resampler_xx_0.set_resamp_ratio((3.0*self.baseband_sampling_rate/2.0)/self.dect_symbol_rate/4.0)
+        self.rtlsdr_source_0.set_sample_rate(self.baseband_sampling_rate)
 
-    def get_rx_gain(self):
-        return self.rx_gain
+    def get_xlate_offset1(self):
+        return self.xlate_offset1
 
-    def set_rx_gain(self, rx_gain):
-        self.rx_gain = rx_gain
+    def set_xlate_offset1(self, xlate_offset1):
+        self.xlate_offset1 = xlate_offset1
+        self.freq_xlating_fir_filter_xxx_0.set_center_freq(self.xlate_offset1)
+        self.rtlsdr_source_0.set_center_freq(self.rx_freq-self.xlate_offset1, 0)
 
     def get_rx_freq(self):
         return self.rx_freq
@@ -216,7 +237,7 @@ class top_block(gr.top_block, Qt.QWidget):
     def set_rx_freq(self, rx_freq):
         self.rx_freq = rx_freq
         self._rx_freq_callback(self.rx_freq)
-        self.uhd_usrp_source_0.set_center_freq(self.rx_freq, 0)
+        self.rtlsdr_source_0.set_center_freq(self.rx_freq-self.xlate_offset1, 0)
 
     def get_resampler_filter_taps(self):
         return self.resampler_filter_taps
@@ -230,7 +251,13 @@ class top_block(gr.top_block, Qt.QWidget):
 
     def set_resample_ratio(self, resample_ratio):
         self.resample_ratio = resample_ratio
-        self.mmse_resampler_xx_0.set_resamp_ratio(self.resample_ratio)
+
+    def get_ppm_corr(self):
+        return self.ppm_corr
+
+    def set_ppm_corr(self, ppm_corr):
+        self.ppm_corr = ppm_corr
+        self.rtlsdr_source_0.set_freq_corr(self.ppm_corr, 0)
 
     def get_part_id(self):
         return self.part_id
@@ -239,6 +266,34 @@ class top_block(gr.top_block, Qt.QWidget):
         self.part_id = part_id
         self._part_id_callback(self.part_id)
         self.dect2_packet_decoder_0.select_rx_part(self.part_id)
+
+    def get_options_low_pass(self):
+        return self.options_low_pass
+
+    def set_options_low_pass(self, options_low_pass):
+        self.options_low_pass = options_low_pass
+        self.freq_xlating_fir_filter_xxx_0.set_taps(firdes.low_pass(1, self.baseband_sampling_rate, self.options_low_pass, self.options_low_pass*0.2))
+
+    def get_if_gain(self):
+        return self.if_gain
+
+    def set_if_gain(self, if_gain):
+        self.if_gain = if_gain
+        self.rtlsdr_source_0.set_if_gain(self.if_gain, 0)
+
+    def get_VGA_bb_gain(self):
+        return self.VGA_bb_gain
+
+    def set_VGA_bb_gain(self, VGA_bb_gain):
+        self.VGA_bb_gain = VGA_bb_gain
+        self.rtlsdr_source_0.set_bb_gain(self.VGA_bb_gain, 0)
+
+    def get_LNA_rf_gain(self):
+        return self.LNA_rf_gain
+
+    def set_LNA_rf_gain(self, LNA_rf_gain):
+        self.LNA_rf_gain = LNA_rf_gain
+        self.rtlsdr_source_0.set_gain(self.LNA_rf_gain, 0)
 
 
 
