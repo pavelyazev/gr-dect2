@@ -36,7 +36,7 @@ namespace gr {
     class DECT2_API phase_diff : virtual public gr::sync_block
     {
      public:
-      typedef boost::shared_ptr<phase_diff> sptr;
+      typedef std::shared_ptr<phase_diff> sptr;
 
       /*!
        * \brief Return a shared_ptr to a new instance of dect2::phase_diff.

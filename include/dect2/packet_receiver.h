@@ -36,7 +36,7 @@ namespace gr {
     class DECT2_API packet_receiver : virtual public gr::block
     {
      public:
-      typedef boost::shared_ptr<packet_receiver> sptr;
+      typedef std::shared_ptr<packet_receiver> sptr;
 
       /*!
        * \brief Return a shared_ptr to a new instance of dect2::packet_receiver.

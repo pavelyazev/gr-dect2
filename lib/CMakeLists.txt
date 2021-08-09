@@ -36,7 +36,7 @@ if(NOT dect2_sources)
 endif(NOT dect2_sources)
 
 add_library(gnuradio-dect2 SHARED ${dect2_sources})
-target_link_libraries(gnuradio-dect2 ${Boost_LIBRARIES} gnuradio::gnuradio-runtime gnuradio::gnuradio-blocks gnuradio::gnuradio-filter gnuradio::gnuradio-blocks gnuradio::gnuradio-fft volk)
+target_link_libraries(gnuradio-dect2 ${Boost_LIBRARIES} gnuradio::gnuradio-runtime volk)
 target_include_directories(gnuradio-dect2
     PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
     PUBLIC $<INSTALL_INTERFACE:include>

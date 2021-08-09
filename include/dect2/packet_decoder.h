@@ -36,7 +36,7 @@ namespace gr {
     class DECT2_API packet_decoder : virtual public gr::tagged_stream_block
     {
      public:
-      typedef boost::shared_ptr<packet_decoder> sptr;
+      typedef std::shared_ptr<packet_decoder> sptr;
 
       /*!
        * \brief Return a shared_ptr to a new instance of dect2::packet_decoder.

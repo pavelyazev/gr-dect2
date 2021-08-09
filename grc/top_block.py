@@ -6,7 +6,7 @@
 #
 # GNU Radio Python Flow Graph
 # Title: Top Block
-# GNU Radio version: 3.8.0.0
+# GNU Radio version: v3.9.2.0-95-g02c0d949
 
 from distutils.version import StrictVersion
 
@@ -27,6 +27,7 @@ from gnuradio import blocks
 from gnuradio import filter
 from gnuradio.filter import firdes
 from gnuradio import gr
+from gnuradio.fft import window
 import sys
 import signal
 from argparse import ArgumentParser
@@ -36,13 +37,17 @@ from gnuradio import uhd
 import time
 from gnuradio import vocoder
 from gnuradio.qtgui import Range, RangeWidget
+from PyQt5 import QtCore
 import dect2
+
+
+
 from gnuradio import qtgui
 
 class top_block(gr.top_block, Qt.QWidget):
 
     def __init__(self):
-        gr.top_block.__init__(self, "Top Block")
+        gr.top_block.__init__(self, "Top Block", catch_exceptions=True)
         Qt.QWidget.__init__(self)
         self.setWindowTitle("Top Block")
         qtgui.util.check_set_qss()
@@ -89,12 +94,12 @@ class top_block(gr.top_block, Qt.QWidget):
         # Blocks
         ##################################################
         self._rx_gain_range = Range(0, 30, 1, 0, 200)
-        self._rx_gain_win = RangeWidget(self._rx_gain_range, self.set_rx_gain, 'RX Gain', "counter_slider", float)
-        self.top_grid_layout.addWidget(self._rx_gain_win)
+        self._rx_gain_win = RangeWidget(self._rx_gain_range, self.set_rx_gain, 'RX Gain', "counter_slider", float, QtCore.Qt.Horizontal)
+        self.top_layout.addWidget(self._rx_gain_win)
         # Create the options list
-        self._rx_freq_options = [1897344000, 1881792000, 1883520000, 1885248000, 1886876000, 1888704000, 1890432000, 1892160000, 1893888000, 1895616000,]
+        self._rx_freq_options = [1897344000, 1895616000, 1893888000, 1892160000, 1890432000, 1888704000, 1886876000, 1885248000, 1883520000, 1881792000, 1899072000, 1900800000, 1902528000, 1904256000, 1905984000, 1907712000, 1909440, 1911168000, 1912896000, 1914624000, 1916352000, 1918080000, 1919808000, 1921536000, 1923264000, 1924992000, 1926720000, 1928448000, 1930176000, 1931904000, 1933632000, 1935360000, 1937088000]
         # Create the labels list
-        self._rx_freq_labels = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+        self._rx_freq_labels = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31', '32']
         # Create the combo box
         self._rx_freq_tool_bar = Qt.QToolBar(self)
         self._rx_freq_tool_bar.addWidget(Qt.QLabel('Carrier Number' + ": "))
@@ -106,31 +111,36 @@ class top_block(gr.top_block, Qt.QWidget):
         self._rx_freq_combo_box.currentIndexChanged.connect(
             lambda i: self.set_rx_freq(self._rx_freq_options[i]))
         # Create the radio buttons
-        self.top_grid_layout.addWidget(self._rx_freq_tool_bar)
+        self.top_layout.addWidget(self._rx_freq_tool_bar)
         self.vocoder_g721_decode_bs_0 = vocoder.g721_decode_bs()
         self.uhd_usrp_source_0 = uhd.usrp_source(
             ",".join(('', "")),
             uhd.stream_args(
                 cpu_format="fc32",
                 args='',
-                channels=[],
+                channels=list(range(0,1)),
             ),
         )
-        self.uhd_usrp_source_0.set_center_freq(rx_freq, 0)
-        self.uhd_usrp_source_0.set_gain(rx_gain, 0)
-        self.uhd_usrp_source_0.set_antenna('LNAW', 0)
         self.uhd_usrp_source_0.set_samp_rate(3125000)
         # No synchronization enforced.
+
+        self.uhd_usrp_source_0.set_center_freq(rx_freq, 0)
+        self.uhd_usrp_source_0.set_antenna('TX/RX', 0)
+        self.uhd_usrp_source_0.set_gain(rx_gain, 0)
+        self.rational_resampler_xxx_1 = filter.rational_resampler_ccc(
+                interpolation=3,
+                decimation=2,
+                taps=resampler_filter_taps,
+                fractional_bw=0)
         self.rational_resampler_xxx_0 = filter.rational_resampler_fff(
                 interpolation=6,
                 decimation=1,
-                taps=None,
-                fractional_bw=None)
-        self.rational_resampler = filter.rational_resampler_base_ccc(3, 2, resampler_filter_taps)
+                taps=[],
+                fractional_bw=0)
         # Create the options list
-        self._part_id_options = [0, 1, 2, 3, 4, 5, 6, 7, 8]
+        self._part_id_options = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32]
         # Create the labels list
-        self._part_id_labels = ["0", "1", "2", "3", "4", "5", "6", "7", "8"]
+        self._part_id_labels = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31', '32']
         # Create the combo box
         self._part_id_tool_bar = Qt.QToolBar(self)
         self._part_id_tool_bar.addWidget(Qt.QLabel('Select Part' + ": "))
@@ -142,13 +152,13 @@ class top_block(gr.top_block, Qt.QWidget):
         self._part_id_combo_box.currentIndexChanged.connect(
             lambda i: self.set_part_id(self._part_id_options[i]))
         # Create the radio buttons
-        self.top_grid_layout.addWidget(self._part_id_tool_bar)
+        self.top_layout.addWidget(self._part_id_tool_bar)
         self.mmse_resampler_xx_0 = filter.mmse_resampler_cc(0, resample_ratio)
         self.dect2_phase_diff_0 = dect2.phase_diff()
         self.dect2_packet_receiver_0 = dect2.packet_receiver()
         self.dect2_packet_decoder_0 = dect2.packet_decoder()
         self.console_0 = dect2.console()
-        self.top_grid_layout.addWidget(self.console_0)
+        self.top_layout.addWidget(self.console_0)
         self.blocks_short_to_float_0 = blocks.short_to_float(1, 32768)
         self.audio_sink_0 = audio.sink(48000, 'plughw:0,0', True)
 
@@ -164,14 +174,18 @@ class top_block(gr.top_block, Qt.QWidget):
         self.connect((self.dect2_packet_receiver_0, 0), (self.dect2_packet_decoder_0, 0))
         self.connect((self.dect2_phase_diff_0, 0), (self.dect2_packet_receiver_0, 0))
         self.connect((self.mmse_resampler_xx_0, 0), (self.dect2_phase_diff_0, 0))
-        self.connect((self.rational_resampler, 0), (self.mmse_resampler_xx_0, 0))
         self.connect((self.rational_resampler_xxx_0, 0), (self.audio_sink_0, 0))
-        self.connect((self.uhd_usrp_source_0, 0), (self.rational_resampler, 0))
+        self.connect((self.rational_resampler_xxx_1, 0), (self.mmse_resampler_xx_0, 0))
+        self.connect((self.uhd_usrp_source_0, 0), (self.rational_resampler_xxx_1, 0))
         self.connect((self.vocoder_g721_decode_bs_0, 0), (self.blocks_short_to_float_0, 0))
+
 
     def closeEvent(self, event):
         self.settings = Qt.QSettings("GNU Radio", "top_block")
         self.settings.setValue("geometry", self.saveGeometry())
+        self.stop()
+        self.wait()
+
         event.accept()
 
     def get_dect_symbol_rate(self):
@@ -209,6 +223,7 @@ class top_block(gr.top_block, Qt.QWidget):
 
     def set_rx_gain(self, rx_gain):
         self.rx_gain = rx_gain
+        self.uhd_usrp_source_0.set_gain(self.rx_gain, 0)
 
     def get_rx_freq(self):
         return self.rx_freq
@@ -223,7 +238,7 @@ class top_block(gr.top_block, Qt.QWidget):
 
     def set_resampler_filter_taps(self, resampler_filter_taps):
         self.resampler_filter_taps = resampler_filter_taps
-        self.rational_resampler.set_taps(self.resampler_filter_taps)
+        self.rational_resampler_xxx_1.set_taps(self.resampler_filter_taps)
 
     def get_resample_ratio(self):
         return self.resample_ratio
@@ -242,6 +257,7 @@ class top_block(gr.top_block, Qt.QWidget):
 
 
 
+
 def main(top_block_cls=top_block, options=None):
 
     if StrictVersion("4.5.0") <= StrictVersion(Qt.qVersion()) < StrictVersion("5.0.0"):
@@ -250,10 +266,15 @@ def main(top_block_cls=top_block, options=None):
     qapp = Qt.QApplication(sys.argv)
 
     tb = top_block_cls()
+
     tb.start()
+
     tb.show()
 
     def sig_handler(sig=None, frame=None):
+        tb.stop()
+        tb.wait()
+
         Qt.QApplication.quit()
 
     signal.signal(signal.SIGINT, sig_handler)
@@ -263,12 +284,7 @@ def main(top_block_cls=top_block, options=None):
     timer.start(500)
     timer.timeout.connect(lambda: None)
 
-    def quitting():
-        tb.stop()
-        tb.wait()
-    qapp.aboutToQuit.connect(quitting)
     qapp.exec_()
-
 
 if __name__ == '__main__':
     main()
