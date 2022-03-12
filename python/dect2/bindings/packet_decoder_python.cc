@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Free Software Foundation, Inc.
+ * Copyright 2022 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -23,7 +23,7 @@
 
 namespace py = pybind11;
 
-#include <dect2/packet_decoder.h>
+#include <gnuradio/dect2/packet_decoder.h>
 // pydoc.h is automatically generated in the build directory
 #include <packet_decoder_pydoc.h>
 

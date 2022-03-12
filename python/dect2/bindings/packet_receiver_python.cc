@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Free Software Foundation, Inc.
+ * Copyright 2022 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -13,8 +13,8 @@
 /* If manual edits are made, the following tags should be modified accordingly.    */
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
-/* BINDTOOL_HEADER_FILE(phase_diff.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(5db2f475621480874afb59116d517034)                     */
+/* BINDTOOL_HEADER_FILE(packet_receiver.h)                                        */
+/* BINDTOOL_HEADER_FILE_HASH(d31a1095683585a154545013469d2564)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -23,21 +23,21 @@
 
 namespace py = pybind11;
 
-#include <dect2/phase_diff.h>
+#include <gnuradio/dect2/packet_receiver.h>
 // pydoc.h is automatically generated in the build directory
-#include <phase_diff_pydoc.h>
+#include <packet_receiver_pydoc.h>
 
-void bind_phase_diff(py::module& m)
+void bind_packet_receiver(py::module& m)
 {
 
-    using phase_diff    = ::gr::dect2::phase_diff;
+    using packet_receiver    = ::gr::dect2::packet_receiver;
 
 
-    py::class_<phase_diff, gr::sync_block, gr::block, gr::basic_block,
-        std::shared_ptr<phase_diff>>(m, "phase_diff", D(phase_diff))
+    py::class_<packet_receiver, gr::block, gr::basic_block,
+        std::shared_ptr<packet_receiver>>(m, "packet_receiver", D(packet_receiver))
 
-        .def(py::init(&phase_diff::make),
-           D(phase_diff,make)
+        .def(py::init(&packet_receiver::make),
+           D(packet_receiver,make)
         )
         
 

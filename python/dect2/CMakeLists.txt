@@ -23,7 +23,7 @@ GR_PYTHON_INSTALL(
     FILES
     __init__.py
     console.py
-    DESTINATION ${GR_PYTHON_DIR}/dect2
+    DESTINATION ${GR_PYTHON_DIR}/gnuradio/dect2
 )
 
 ########################################################################
@@ -32,3 +32,11 @@ GR_PYTHON_INSTALL(
 include(GrTest)
 
 set(GR_TEST_TARGET_DEPS gnuradio-dect2)
+
+# Create a package directory that tests can import. It includes everything
+# from `python/`.
+add_custom_target(
+  copy_module_for_tests ALL
+  COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}
+          ${CMAKE_BINARY_DIR}/test_modules/gnuradio/dect2/
+)

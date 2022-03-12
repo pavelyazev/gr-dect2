@@ -26,6 +26,7 @@
 #include "packet_decoder_impl.h"
 
 #include <cstdio> 
+#include <iomanip>
 
 namespace gr {
   namespace dect2 {

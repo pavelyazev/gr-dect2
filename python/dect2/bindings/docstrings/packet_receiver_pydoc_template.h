@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Free Software Foundation, Inc.
+ * Copyright 2022 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -16,12 +16,12 @@
 
 
  
- static const char *__doc_gr_dect2_phase_diff = R"doc()doc";
+ static const char *__doc_gr_dect2_packet_receiver = R"doc()doc";
 
 
- static const char *__doc_gr_dect2_phase_diff_phase_diff = R"doc()doc";
+ static const char *__doc_gr_dect2_packet_receiver_packet_receiver = R"doc()doc";
 
 
- static const char *__doc_gr_dect2_phase_diff_make = R"doc()doc";
+ static const char *__doc_gr_dect2_packet_receiver_make = R"doc()doc";
 
   

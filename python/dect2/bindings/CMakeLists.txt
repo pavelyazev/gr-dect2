@@ -29,13 +29,19 @@ include(GrPybind)
 ########################################################################
 
 list(APPEND dect2_python_files
-    packet_decoder_python.cc
-    packet_receiver_python.cc
-    phase_diff_python.cc python_bindings.cc)
+    python_bindings.cc)
 
-GR_PYBIND_MAKE_OOT(dect2 
-   ../..
+GR_PYBIND_MAKE_OOT(dect2
+   ../../..
    gr::dect2
    "${dect2_python_files}")
 
-install(TARGETS dect2_python DESTINATION ${GR_PYTHON_DIR}/dect2 COMPONENT pythonapi)
+# copy in bindings .so file for use in QA test module
+add_custom_target(
+  copy_bindings_for_tests ALL
+  COMMAND
+    ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/*.so"
+    ${CMAKE_BINARY_DIR}/test_modules/gnuradio/dect2/
+  DEPENDS dect2_python)
+
+install(TARGETS dect2_python DESTINATION ${GR_PYTHON_DIR}/gnuradio/dect2 COMPONENT pythonapi)

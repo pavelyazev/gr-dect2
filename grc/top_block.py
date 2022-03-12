@@ -6,9 +6,9 @@
 #
 # GNU Radio Python Flow Graph
 # Title: Top Block
-# GNU Radio version: v3.9.2.0-95-g02c0d949
+# GNU Radio version: v3.11.0.0git-46-g614681ba
 
-from distutils.version import StrictVersion
+from packaging.version import Version as StrictVersion
 
 if __name__ == '__main__':
     import ctypes
@@ -83,26 +83,25 @@ class top_block(gr.top_block, Qt.QWidget):
         self.dect_symbol_rate = dect_symbol_rate = 1152000
         self.dect_occupied_bandwidth = dect_occupied_bandwidth = 1.2*dect_symbol_rate
         self.dect_channel_bandwidth = dect_channel_bandwidth = 1.728e6
-        self.baseband_sampling_rate = baseband_sampling_rate = 100000000/32
+        self.baseband_sampling_rate = baseband_sampling_rate = 3200000
         self.rx_gain = rx_gain = 0
         self.rx_freq = rx_freq = 1897344000
         self.resampler_filter_taps = resampler_filter_taps = firdes.low_pass_2(1, 3*baseband_sampling_rate, dect_occupied_bandwidth/2, (dect_channel_bandwidth - dect_occupied_bandwidth)/2, 30)
-        self.resample_ratio = resample_ratio = int((3.0*baseband_sampling_rate/2.0)/dect_symbol_rate/4.0)
         self.part_id = part_id = 0
 
         ##################################################
         # Blocks
         ##################################################
         self._rx_gain_range = Range(0, 30, 1, 0, 200)
-        self._rx_gain_win = RangeWidget(self._rx_gain_range, self.set_rx_gain, 'RX Gain', "counter_slider", float, QtCore.Qt.Horizontal)
+        self._rx_gain_win = RangeWidget(self._rx_gain_range, self.set_rx_gain, "RX Gain", "counter_slider", float, QtCore.Qt.Horizontal)
         self.top_layout.addWidget(self._rx_gain_win)
         # Create the options list
-        self._rx_freq_options = [1897344000, 1895616000, 1893888000, 1892160000, 1890432000, 1888704000, 1886876000, 1885248000, 1883520000, 1881792000, 1899072000, 1900800000, 1902528000, 1904256000, 1905984000, 1907712000, 1909440, 1911168000, 1912896000, 1914624000, 1916352000, 1918080000, 1919808000, 1921536000, 1923264000, 1924992000, 1926720000, 1928448000, 1930176000, 1931904000, 1933632000, 1935360000, 1937088000]
+        self._rx_freq_options = [1897344000, 1881792000, 1883520000, 1885248000, 1886876000, 1888704000, 1890432000, 1892160000, 1893888000, 1895616000]
         # Create the labels list
-        self._rx_freq_labels = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31', '32']
+        self._rx_freq_labels = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
         # Create the combo box
         self._rx_freq_tool_bar = Qt.QToolBar(self)
-        self._rx_freq_tool_bar.addWidget(Qt.QLabel('Carrier Number' + ": "))
+        self._rx_freq_tool_bar.addWidget(Qt.QLabel("Carrier Number" + ": "))
         self._rx_freq_combo_box = Qt.QComboBox()
         self._rx_freq_tool_bar.addWidget(self._rx_freq_combo_box)
         for _label in self._rx_freq_labels: self._rx_freq_combo_box.addItem(_label)
@@ -121,11 +120,11 @@ class top_block(gr.top_block, Qt.QWidget):
                 channels=list(range(0,1)),
             ),
         )
-        self.uhd_usrp_source_0.set_samp_rate(3125000)
-        # No synchronization enforced.
+        self.uhd_usrp_source_0.set_samp_rate(baseband_sampling_rate)
+        self.uhd_usrp_source_0.set_time_unknown_pps(uhd.time_spec(0))
 
         self.uhd_usrp_source_0.set_center_freq(rx_freq, 0)
-        self.uhd_usrp_source_0.set_antenna('TX/RX', 0)
+        self.uhd_usrp_source_0.set_antenna('RX2', 0)
         self.uhd_usrp_source_0.set_gain(rx_gain, 0)
         self.rational_resampler_xxx_1 = filter.rational_resampler_ccc(
                 interpolation=3,
@@ -138,12 +137,12 @@ class top_block(gr.top_block, Qt.QWidget):
                 taps=[],
                 fractional_bw=0)
         # Create the options list
-        self._part_id_options = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32]
+        self._part_id_options = [0, 1, 2, 3, 4, 5, 6, 7, 8]
         # Create the labels list
-        self._part_id_labels = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31', '32']
+        self._part_id_labels = ['0', '1', '2', '3', '4', '5', '6', '7', '8']
         # Create the combo box
         self._part_id_tool_bar = Qt.QToolBar(self)
-        self._part_id_tool_bar.addWidget(Qt.QLabel('Select Part' + ": "))
+        self._part_id_tool_bar.addWidget(Qt.QLabel("Select Part" + ": "))
         self._part_id_combo_box = Qt.QComboBox()
         self._part_id_tool_bar.addWidget(self._part_id_combo_box)
         for _label in self._part_id_labels: self._part_id_combo_box.addItem(_label)
@@ -153,15 +152,14 @@ class top_block(gr.top_block, Qt.QWidget):
             lambda i: self.set_part_id(self._part_id_options[i]))
         # Create the radio buttons
         self.top_layout.addWidget(self._part_id_tool_bar)
-        self.mmse_resampler_xx_0 = filter.mmse_resampler_cc(0, resample_ratio)
+        self.mmse_resampler_xx_0 = filter.mmse_resampler_cc(0, (3.0*baseband_sampling_rate/2.0)/dect_symbol_rate/4.0)
         self.dect2_phase_diff_0 = dect2.phase_diff()
         self.dect2_packet_receiver_0 = dect2.packet_receiver()
         self.dect2_packet_decoder_0 = dect2.packet_decoder()
         self.console_0 = dect2.console()
         self.top_layout.addWidget(self.console_0)
         self.blocks_short_to_float_0 = blocks.short_to_float(1, 32768)
-        self.audio_sink_0 = audio.sink(48000, 'plughw:0,0', True)
-
+        self.audio_sink_0 = audio.sink(48000, '', True)
 
 
         ##################################################
@@ -194,7 +192,7 @@ class top_block(gr.top_block, Qt.QWidget):
     def set_dect_symbol_rate(self, dect_symbol_rate):
         self.dect_symbol_rate = dect_symbol_rate
         self.set_dect_occupied_bandwidth(1.2*self.dect_symbol_rate)
-        self.set_resample_ratio(int((3.0*self.baseband_sampling_rate/2.0)/self.dect_symbol_rate/4.0))
+        self.mmse_resampler_xx_0.set_resamp_ratio((3.0*self.baseband_sampling_rate/2.0)/self.dect_symbol_rate/4.0)
 
     def get_dect_occupied_bandwidth(self):
         return self.dect_occupied_bandwidth
@@ -215,8 +213,9 @@ class top_block(gr.top_block, Qt.QWidget):
 
     def set_baseband_sampling_rate(self, baseband_sampling_rate):
         self.baseband_sampling_rate = baseband_sampling_rate
-        self.set_resample_ratio(int((3.0*self.baseband_sampling_rate/2.0)/self.dect_symbol_rate/4.0))
         self.set_resampler_filter_taps(firdes.low_pass_2(1, 3*self.baseband_sampling_rate, self.dect_occupied_bandwidth/2, (self.dect_channel_bandwidth - self.dect_occupied_bandwidth)/2, 30))
+        self.mmse_resampler_xx_0.set_resamp_ratio((3.0*self.baseband_sampling_rate/2.0)/self.dect_symbol_rate/4.0)
+        self.uhd_usrp_source_0.set_samp_rate(self.baseband_sampling_rate)
 
     def get_rx_gain(self):
         return self.rx_gain
@@ -239,13 +238,6 @@ class top_block(gr.top_block, Qt.QWidget):
     def set_resampler_filter_taps(self, resampler_filter_taps):
         self.resampler_filter_taps = resampler_filter_taps
         self.rational_resampler_xxx_1.set_taps(self.resampler_filter_taps)
-
-    def get_resample_ratio(self):
-        return self.resample_ratio
-
-    def set_resample_ratio(self, resample_ratio):
-        self.resample_ratio = resample_ratio
-        self.mmse_resampler_xx_0.set_resamp_ratio(self.resample_ratio)
 
     def get_part_id(self):
         return self.part_id

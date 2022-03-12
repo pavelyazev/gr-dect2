@@ -24,5 +24,5 @@ install(FILES
     api.h
     phase_diff.h
     packet_decoder.h
-    packet_receiver.h DESTINATION include/dect2
+    packet_receiver.h DESTINATION include/gnuradio/dect2
 )
