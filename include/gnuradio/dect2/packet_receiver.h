@@ -22,7 +22,7 @@
 #ifndef INCLUDED_DECT2_PACKET_RECEIVER_H
 #define INCLUDED_DECT2_PACKET_RECEIVER_H
 
-#include <dect2/api.h>
+#include <gnuradio/dect2/api.h>
 #include <gnuradio/block.h>
 
 namespace gr {

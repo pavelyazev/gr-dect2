@@ -21,7 +21,7 @@
 #ifndef INCLUDED_DECT2_PHASE_DIFF_IMPL_H
 #define INCLUDED_DECT2_PHASE_DIFF_IMPL_H
 
-#include <dect2/phase_diff.h>
+#include <gnuradio/dect2/phase_diff.h>
 
 namespace gr {
   namespace dect2 {

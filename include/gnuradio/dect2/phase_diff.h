@@ -22,7 +22,7 @@
 #ifndef INCLUDED_DECT2_PHASE_DIFF_H
 #define INCLUDED_DECT2_PHASE_DIFF_H
 
-#include <dect2/api.h>
+#include <gnuradio/dect2/api.h>
 #include <gnuradio/sync_block.h>
 
 namespace gr {

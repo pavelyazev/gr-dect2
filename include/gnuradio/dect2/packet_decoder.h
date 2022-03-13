@@ -22,7 +22,7 @@
 #ifndef INCLUDED_DECT2_PACKET_DECODER_H
 #define INCLUDED_DECT2_PACKET_DECODER_H
 
-#include <dect2/api.h>
+#include <gnuradio/dect2/api.h>
 #include <gnuradio/tagged_stream_block.h>
 
 namespace gr {
