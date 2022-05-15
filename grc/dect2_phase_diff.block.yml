@@ -13,7 +13,7 @@ outputs:
     dtype: float
 
 templates:
-    imports: import dect2
+    imports: import gnuradio.dect2 as dect2
     make: dect2.phase_diff()
 
 file_format: 1

@@ -16,7 +16,7 @@ inputs:
     optional: true
 
 templates:
-    imports: import dect2
+    imports: import gnuradio.dect2 as dect2
     #make: "<% win = 'self.%s'%id %>\ndect2.console()\n${gui_hint(in)}\n  "
     make: |-
         <%

@@ -25,7 +25,7 @@ outputs:
     optional: true
 
 templates:
-    imports: import dect2
+    imports: import gnuradio.dect2 as dect2
     make: dect2.packet_decoder()
     callbacks:
     - select_rx_part(${rx_id})

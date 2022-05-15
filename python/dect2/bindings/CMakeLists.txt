@@ -29,6 +29,9 @@ include(GrPybind)
 ########################################################################
 
 list(APPEND dect2_python_files
+    packet_decoder_python.cc
+    packet_receiver_python.cc
+    phase_diff_python.cc
     python_bindings.cc)
 
 GR_PYBIND_MAKE_OOT(dect2
