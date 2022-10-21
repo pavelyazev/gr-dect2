@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2015 <+YOU OR YOUR COMPANY+>.
+ * Copyright 2014 <+YOU OR YOUR COMPANY+>.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,11 +19,11 @@
  */
 
 
-#ifndef INCLUDED_DECT2_PACKET_RECEIVER_H
-#define INCLUDED_DECT2_PACKET_RECEIVER_H
+#ifndef INCLUDED_DECT2_PHASE_DIFF_H
+#define INCLUDED_DECT2_PHASE_DIFF_H
 
-#include <dect2/api.h>
-#include <gnuradio/block.h>
+#include <gnuradio/dect2/api.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr {
   namespace dect2 {
@@ -33,17 +33,17 @@ namespace gr {
      * \ingroup dect2
      *
      */
-    class DECT2_API packet_receiver : virtual public gr::block
+    class DECT2_API phase_diff : virtual public gr::sync_block
     {
      public:
-      typedef boost::shared_ptr<packet_receiver> sptr;
+      typedef std::shared_ptr<phase_diff> sptr;
 
       /*!
-       * \brief Return a shared_ptr to a new instance of dect2::packet_receiver.
+       * \brief Return a shared_ptr to a new instance of dect2::phase_diff.
        *
-       * To avoid accidental use of raw pointers, dect2::packet_receiver's
+       * To avoid accidental use of raw pointers, dect2::phase_diff's
        * constructor is in a private implementation
-       * class. dect2::packet_receiver::make is the public interface for
+       * class. dect2::phase_diff::make is the public interface for
        * creating new instances.
        */
       static sptr make();
@@ -52,5 +52,5 @@ namespace gr {
   } // namespace dect2
 } // namespace gr
 
-#endif /* INCLUDED_DECT2_PACKET_RECEIVER_H */
+#endif /* INCLUDED_DECT2_PHASE_DIFF_H */
 

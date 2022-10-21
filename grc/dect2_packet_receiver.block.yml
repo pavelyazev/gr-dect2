@@ -16,7 +16,7 @@ outputs:
     optional: true
 
 templates:
-    imports: import dect2
+    imports: import gnuradio.dect2 as dect2
     make: dect2.packet_receiver()
 
 file_format: 1

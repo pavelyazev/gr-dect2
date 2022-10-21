@@ -26,6 +26,7 @@
 #include "packet_decoder_impl.h"
 
 #include <cstdio> 
+#include <iomanip>
 
 namespace gr {
   namespace dect2 {
@@ -239,7 +240,7 @@ namespace gr {
         d_selected_rx_id = 0;
 
         message_port_register_in(pmt::mp("rcvr_msg_in"));
-        set_msg_handler(pmt::mp("rcvr_msg_in"), boost::bind(&packet_decoder_impl::msg_event_handler, this, _1));
+        set_msg_handler(pmt::mp("rcvr_msg_in"), boost::bind(&packet_decoder_impl::msg_event_handler, this, boost::placeholders::_1));
         message_port_register_out(pmt::mp("log_out"));   
 
 

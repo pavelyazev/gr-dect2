@@ -19,11 +19,11 @@
  */
 
 
-#ifndef INCLUDED_DECT2_PACKET_DECODER_H
-#define INCLUDED_DECT2_PACKET_DECODER_H
+#ifndef INCLUDED_DECT2_PACKET_RECEIVER_H
+#define INCLUDED_DECT2_PACKET_RECEIVER_H
 
-#include <dect2/api.h>
-#include <gnuradio/tagged_stream_block.h>
+#include <gnuradio/dect2/api.h>
+#include <gnuradio/block.h>
 
 namespace gr {
   namespace dect2 {
@@ -33,26 +33,24 @@ namespace gr {
      * \ingroup dect2
      *
      */
-    class DECT2_API packet_decoder : virtual public gr::tagged_stream_block
+    class DECT2_API packet_receiver : virtual public gr::block
     {
      public:
-      typedef boost::shared_ptr<packet_decoder> sptr;
+      typedef std::shared_ptr<packet_receiver> sptr;
 
       /*!
-       * \brief Return a shared_ptr to a new instance of dect2::packet_decoder.
+       * \brief Return a shared_ptr to a new instance of dect2::packet_receiver.
        *
-       * To avoid accidental use of raw pointers, dect2::packet_decoder's
+       * To avoid accidental use of raw pointers, dect2::packet_receiver's
        * constructor is in a private implementation
-       * class. dect2::packet_decoder::make is the public interface for
+       * class. dect2::packet_receiver::make is the public interface for
        * creating new instances.
        */
       static sptr make();
-
-      virtual void select_rx_part(uint32_t rx_id) = 0;
     };
 
   } // namespace dect2
 } // namespace gr
 
-#endif /* INCLUDED_DECT2_PACKET_DECODER_H */
+#endif /* INCLUDED_DECT2_PACKET_RECEIVER_H */
 

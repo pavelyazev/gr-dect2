@@ -21,7 +21,7 @@
 #ifndef INCLUDED_DECT2_PACKET_RECEIVER_IMPL_H
 #define INCLUDED_DECT2_PACKET_RECEIVER_IMPL_H
 
-#include <dect2/packet_receiver.h>
+#include <gnuradio/dect2/packet_receiver.h>
 
 
 #define MAX_PARTS          8                      // Maximum number of DECT parts to be tracked

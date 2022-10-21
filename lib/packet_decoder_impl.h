@@ -21,7 +21,7 @@
 #ifndef INCLUDED_DECT2_PACKET_DECODER_IMPL_H
 #define INCLUDED_DECT2_PACKET_DECODER_IMPL_H
 
-#include <dect2/packet_decoder.h>
+#include <gnuradio/dect2/packet_decoder.h>
 
 #define MAX_PARTS          8
 #define A_FIELD_BITS      64

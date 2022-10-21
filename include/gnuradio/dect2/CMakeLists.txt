@@ -1,4 +1,4 @@
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2011,2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -18,27 +18,11 @@
 # Boston, MA 02110-1301, USA.
 
 ########################################################################
-# Include python install macros
+# Install public header files
 ########################################################################
-include(GrPython)
-if(NOT PYTHONINTERP_FOUND)
-    return()
-endif()
-
-########################################################################
-# Install python sources
-########################################################################
-GR_PYTHON_INSTALL(
-    FILES
-    __init__.py
-    console.py
-    DESTINATION ${GR_PYTHON_DIR}/dect2
+install(FILES
+    api.h
+    phase_diff.h
+    packet_decoder.h
+    packet_receiver.h DESTINATION include/gnuradio/dect2
 )
-
-########################################################################
-# Handle the unit tests
-########################################################################
-include(GrTest)
-
-set(GR_TEST_TARGET_DEPS gnuradio-dect2)
-set(GR_TEST_PYTHON_DIRS ${CMAKE_BINARY_DIR}/swig)
