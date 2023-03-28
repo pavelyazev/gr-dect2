@@ -52,7 +52,7 @@ namespace gr {
 
             uint32_t  d_begin_pos;
             uint32_t  d_end_pos;
-            uint32_t  d_post_wait_cnt;
+            //uint32_t  d_post_wait_cnt;
 
             float     d_smpl_buf[SMPL_BUF_LEN];
             uint32_t  d_smpl_buf_index;

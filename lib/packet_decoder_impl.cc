@@ -401,7 +401,7 @@ namespace gr {
             else if(ptype == _PP_)
             {
                 if(d_cur_part->rpf_fn_cor == true)
-                    d_cur_part->rpf_fn_cor ==  false;
+                    d_cur_part->rpf_fn_cor = false;
                 else
                     d_cur_part->frame_number = (d_cur_part->frame_number + seq_diff) & 0xF; 
             }
