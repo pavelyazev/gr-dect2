@@ -39,12 +39,10 @@ GR_PYBIND_MAKE_OOT(dect2
    gr::dect2
    "${dect2_python_files}")
 
-# copy in bindings .so file for use in QA test module
-add_custom_target(
-  copy_bindings_for_tests ALL
-  COMMAND
-    ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/*.so"
-    ${CMAKE_BINARY_DIR}/test_modules/gnuradio/dect2/
-  DEPENDS dect2_python)
+# copy bindings extension for use in QA test module
+add_custom_command(TARGET dect2_python POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:dect2_python>
+    ${PROJECT_BINARY_DIR}/test_modules/gnuradio/dect2/
+)
 
 install(TARGETS dect2_python DESTINATION ${GR_PYTHON_DIR}/gnuradio/dect2 COMPONENT pythonapi)
