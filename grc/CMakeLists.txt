@@ -22,3 +22,10 @@ install(FILES
     dect2_packet_decoder.block.yml
     dect2_packet_receiver.block.yml DESTINATION share/gnuradio/grc/blocks
 )
+
+install(FILES
+    dect2.grc
+    dect2_b200.grc
+    dect2_Hackrf.grc
+    dect2_plutosdr.grc
+    dect2_soapy.grc DESTINATION ${GR_PKG_DATA_DIR}/examples)
